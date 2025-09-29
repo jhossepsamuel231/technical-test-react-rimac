@@ -1,0 +1,58 @@
+@use '../../styles/tokens' as *;
+
+.plan-hero {
+  text-align: center;
+  padding-block: 24px 16px;
+}
+
+.plan-hero__top {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 1040px;
+  margin-inline: auto;
+}
+
+.plan-hero__back {
+  appearance: none;
+  border: 0;
+  background: none;
+  font-family: var(--ff-sans);
+  font-size: 0.9375rem;
+  color: #5b62f4;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.plan-hero__title {
+  margin: 8px auto 8px;
+  max-width: 20ch;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.6px;
+  color: #141938; /* rgba(20,25,56,1) */
+}
+
+.plan-hero__subtitle {
+  margin: 0 auto 24px;
+  max-width: 60ch;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px; /* exacto del figma */
+  letter-spacing: 0.1px;
+  color: #141938;
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .plan-hero {
+    padding-block: 20px 12px;
+  }
+  .plan-hero__title {
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -0.5px;
+  }
+}

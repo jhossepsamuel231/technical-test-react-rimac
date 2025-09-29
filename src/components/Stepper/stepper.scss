@@ -1,0 +1,86 @@
+@use '../../styles/tokens' as *;
+
+:root {
+  --c-track: rgba(237, 239, 252, 1);
+  --c-primary: #5b62f4;
+}
+
+.stepper {
+  width: 100%;
+  background: var(--c-track);
+  display: grid;
+  place-items: center;
+  padding-block: 8px;
+}
+
+.stepper__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--ff-sans);
+}
+
+.stepper__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepper__badge {
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+
+.stepper__badge.is-active {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+.stepper__badge.is-idle {
+  background: #fff;
+  color: var(--c-ink-600);
+  border-color: rgba(20, 25, 56, 0.16);
+}
+
+.stepper__label {
+  font-size: var(--fs-16);
+  line-height: var(--lh-24);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.stepper__label.is-active {
+  font-weight: 700; /* “Planes y coberturas” */
+  color: var(--c-ink-900);
+}
+
+.stepper__label.is-idle {
+  font-weight: 400; /* “Resumen” */
+  color: var(--c-ink-600);
+}
+
+.stepper__dots {
+  margin-inline: 8px;
+  color: var(--c-ink-600);
+  opacity: 0.6;
+  transform: translateY(-1px);
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .stepper__label {
+    font-size: 0.9375rem;
+  } /* 15px óptico */
+  .stepper__dots {
+    margin-inline: 4px;
+  }
+}

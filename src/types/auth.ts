@@ -1,12 +1,12 @@
 export type DocType = 'DNI' | 'RUC'
 
-export interface UserProfile {
+export type UserProfile = {
   name: string
   lastName: string
   birthDay: string
 }
 
-export interface Session {
+export type Session = {
   profile: UserProfile
   docType: DocType
   docNum: string

@@ -1,89 +1,74 @@
-import { useId } from 'react'
-import './plan-selector.scss'
+import { useMemo, useState } from 'react'
+import Stepper from '@/components/Stepper/Stepper'
+import PlanHero from '@/components/PlanHero/PlanHero'
+import PlanSelector, { type ForWhom } from './PlanSelector'
 
-export type ForWhom = 'me' | 'other'
+import { usePlans } from '@/hooks/usePlans'
+import { calcAge, filterByAge, pickRecommendedIndex, finalPrice, type Plan } from '@/lib/plan-logic'
+import PlanList from '@/components/Plans/PlanList'
 
-type Option = {
-  id: ForWhom
-  title: string
-  description: string
-  icon?: React.ReactNode
-}
+export default function PlansPage() {
+  const username = 'Rocío'
+  const dob = '1999-04-10'
 
-const OPTIONS: Option[] = [
-  {
-    id: 'me',
-    title: 'Para mí',
-    description: 'Cotiza tu seguro de salud y agrega familiares si así lo deseas.',
-  },
-  {
-    id: 'other',
-    title: 'Para alguien más',
-    description: 'Realiza una cotización para uno de tus familiares o cualquier persona.',
-  },
-]
+  const [forWhom, setForWhom] = useState<ForWhom | null>(null)
 
-type Props = {
-  username: string // "Rocío"
-  value: ForWhom | null
-  onChange: (v: ForWhom) => void // aquí podrás disparar el fetch
-}
+  const { data: allPlans, isLoading, isError, refetch } = usePlans(!!forWhom)
 
-export default function PlanSelector({ username, value, onChange }: Props) {
-  const groupId = useId()
+  const userAge = useMemo(() => calcAge(dob), [dob])
+
+  const visiblePlans: Plan[] = useMemo(() => {
+    if (!allPlans) return []
+    const base = filterByAge(allPlans, userAge)
+    if (!forWhom) return base
+    const discount = forWhom === 'other'
+    return base.map((p) => ({ ...p, price: finalPrice(p.price, discount) }))
+  }, [allPlans, userAge, forWhom])
+
+  const recommendedIndex = useMemo(
+    () => (visiblePlans.length ? pickRecommendedIndex(visiblePlans, userAge) : null),
+    [visiblePlans, userAge],
+  )
 
   return (
-    <section aria-labelledby="plans-heading">
-      {/* Breadcrumb */}
-      <div className="plan-hero__breadcrumb" aria-label="Progreso">
-        <span className="plan-hero__step--active">1 Planes y coberturas</span>
-        <span className="plan-hero__step">2 Resumen</span>
-      </div>
+    <main>
+      <Stepper active="plans" />
+      <PlanHero username={username} onBack={() => history.back()} />
+      <PlanSelector value={forWhom} onChange={setForWhom} />
 
-      {/* Títulos */}
-      <header className="plan-hero" id="plans-heading">
-        <h1 className="plan-hero__title">{username} ¿Para quién deseas cotizar?</h1>
-        <p className="plan-hero__subtitle">
-          Selecciona la opción que se ajuste más a tus necesidades.
-        </p>
-      </header>
+      {!forWhom && (
+        <p style={{ textAlign: 'center', opacity: 0.7 }}>Elige una opción para ver los planes.</p>
+      )}
 
-      {/* RadioGroup accesible */}
-      <div role="radiogroup" aria-labelledby="plans-heading" className="option-grid">
-        {OPTIONS.map((opt) => {
-          const checked = value === opt.id
-          const inputId = `${groupId}-${opt.id}`
-          return (
-            <label
-              key={opt.id}
-              htmlFor={inputId}
-              role="radio"
-              aria-checked={checked}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') {
-                  e.preventDefault()
-                  onChange(opt.id)
-                }
+      {forWhom && (
+        <section aria-live="polite" aria-busy={isLoading}>
+          {isLoading && <p style={{ textAlign: 'center' }}>Cargando planes…</p>}
+
+          {isError && (
+            <div role="alert" style={{ textAlign: 'center' }}>
+              <p>Hubo un problema al cargar los planes.</p>
+              <button onClick={() => refetch()}>Intentar de nuevo</button>
+            </div>
+          )}
+
+          {!isLoading && !isError && visiblePlans.length === 0 && (
+            <p style={{ textAlign: 'center' }}>
+              No hay planes disponibles para tu edad ({userAge}).
+            </p>
+          )}
+
+          {!isLoading && !isError && visiblePlans.length > 0 && (
+            <PlanList
+              plans={visiblePlans}
+              recommendedIndex={recommendedIndex}
+              forWhom={forWhom}
+              onSelectPlan={(plan: Plan) => {
+                console.log('Elegido:', { forWhom, plan })
               }}
-              className={`option-card ${checked ? 'option-card--checked' : ''}`}
-            >
-              <input
-                id={inputId}
-                className="option-card__input"
-                type="radio"
-                name={groupId}
-                checked={checked}
-                onChange={() => onChange(opt.id)}
-              />
-              <div className="option-card__radio" aria-hidden="true" />
-              {opt.icon}
-              <h3 className="option-card__title">{opt.title}</h3>
-              <p className="option-card__desc">{opt.description}</p>
-            </label>
-          )
-        })}
-      </div>
-    </section>
+            />
+          )}
+        </section>
+      )}
+    </main>
   )
 }
