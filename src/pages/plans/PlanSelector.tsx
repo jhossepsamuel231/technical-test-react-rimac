@@ -28,12 +28,12 @@ const OPTIONS: Option[] = [
   },
 ]
 
-type Props = {
+type PlanSelectorProps = {
   value: ForWhom | null
   onChange: (v: ForWhom) => void
 }
 
-export default function PlanSelector({ value, onChange }: Props) {
+export default function PlanSelector({ value, onChange }: PlanSelectorProps) {
   const groupId = useId()
 
   return (
