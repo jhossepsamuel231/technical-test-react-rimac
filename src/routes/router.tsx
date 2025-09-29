@@ -2,13 +2,13 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import RequireSession from './guards/RequireSession'
 import RequireSelectedPlan from './guards/RequireSelectedPlan'
 import { lazy, Suspense } from 'react'
-import PublicLayout from '../layouts/PublicLayout'
-import PrivateLayout from '../layouts/PrivateLayout'
-import Loader from '../components/router/Loader'
+import PublicLayout from '@/layouts/PublicLayout'
+import PrivateLayout from '@/layouts/PrivateLayout'
+import Loader from '@/components/router/Loader'
 
-const LoginPage = lazy(() => import('../pages/login/LoginPage'))
-const PlansPage = lazy(() => import('../pages/plans/PlansPage'))
-const SummaryPage = lazy(() => import('../pages/summary/SummaryPage'))
+const LoginPage = lazy(() => import('@/pages/login/LoginPage'))
+const PlansPage = lazy(() => import('@/pages/plans/PlansPage'))
+const SummaryPage = lazy(() => import('@/pages/summary/SummaryPage'))
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },

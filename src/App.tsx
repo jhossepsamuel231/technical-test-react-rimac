@@ -1,7 +1,11 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes/router'
-import './App.scss'
+import { SessionProvider } from './hooks/useSession'
 
 export default function App() {
-  return <RouterProvider router={router} />
+  return (
+    <SessionProvider>
+      <RouterProvider router={router} />
+    </SessionProvider>
+  )
 }

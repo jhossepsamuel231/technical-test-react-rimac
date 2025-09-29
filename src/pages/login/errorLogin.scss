@@ -1,0 +1,26 @@
+.fieldError {
+  margin: 4px 0 0;
+  color: #b91c1c;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.formAlert {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff6f6;
+  color: #7f1d1d;
+  border: 1px solid #fecaca;
+}
+
+.docGroup.is-invalid,
+.floatField.is-invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #dc2626;
+}
+
+.docGroup.is-invalid .docGroup__label,
+.floatField.is-invalid .floatField__label {
+  color: #b91c1c;
+}

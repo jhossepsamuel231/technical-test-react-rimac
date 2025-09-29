@@ -1,0 +1,101 @@
+.footer {
+  background: #070b14;
+  color: #e5e7eb;
+}
+
+.footer--public {
+  padding-block: 20px;
+
+  .footer__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+  }
+
+  .footer__brand {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .footer__logo {
+    display: block;
+    height: 42px;
+    width: 85.39px;
+  }
+
+  .footer__copy {
+    text-align: right;
+
+    small {
+      display: inline-block;
+      color: #cdd5df;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 0;
+      vertical-align: middle;
+      opacity: 0.9;
+    }
+  }
+
+  .footer__divider {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer--public {
+    .footer__inner {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .footer__brand {
+      order: 1;
+    }
+
+    .footer__divider {
+      order: 2;
+    }
+
+    .footer__copy {
+      order: 3;
+    }
+
+    .footer__logo {
+      height: 36px;
+      width: 136px;
+    }
+
+    .footer__divider {
+      display: block;
+      width: 92%;
+      height: 1px;
+      background: rgba(205, 213, 223, 0.24);
+      margin-block: 8px 4px;
+    }
+
+    .footer__copy {
+      text-align: center;
+
+      small {
+        color: #e6ebf2;
+        font-family: BR Sonoma;
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 12px;
+        line-height: 20px;
+        letter-spacing: 0.1px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

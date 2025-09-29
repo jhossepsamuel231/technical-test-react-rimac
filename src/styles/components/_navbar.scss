@@ -1,0 +1,82 @@
+.navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.navbar__brandLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar__logo {
+  width: 73.19px;
+  height: auto;
+  display: block;
+}
+
+.navbar__contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 305px;
+  min-height: 60px;
+  padding-block: 20px;
+  white-space: nowrap;
+}
+
+.navbar__note {
+  font-family: br-sonoma-medium, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .navbar__note {
+    display: none;
+  }
+}
+
+.navbar__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar__phoneIcon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.navbar__phoneText {
+  font-family: br-sonoma-bold, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0.4px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 360px) {
+  .navbar__phoneText {
+    font-size: 16px;
+  }
+}

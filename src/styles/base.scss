@@ -1,0 +1,26 @@
+:root {
+  --container-max: 1360px;
+  --navbar-h: 64px;
+
+  --pad-x-mobile: 16px;
+  --pad-x-small: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
