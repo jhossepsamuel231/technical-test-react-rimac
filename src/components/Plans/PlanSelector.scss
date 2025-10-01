@@ -118,10 +118,9 @@
   background: #fff;
 }
 
-/* MOBILE FIX */
 @media (max-width: 480px) {
   .option-grid {
-    padding-inline: 16px; /* 👈 margen lateral para que no se peguen */
+    padding-inline: 16px;
   }
 
   .option-card {

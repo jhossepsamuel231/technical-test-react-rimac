@@ -96,7 +96,6 @@ export default function PlanList({ plans, recommendedIndex = null, onSelectPlan,
         </button>
       </div>
 
-      {/* Paginador simple */}
       <div className="plans__pager" aria-live="polite">
         {page + 1} / {totalPages}
       </div>

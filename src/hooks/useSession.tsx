@@ -1,44 +1,44 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { getSession, login as authLogin, logout as authLogout } from '@/services/auth'
+import React from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getSession, login as loginService, logout as logoutService } from '@/services/auth'
 import type { Session, DocType } from '@/types/auth'
 
-type Ctx = {
-  session: Session | null
-  isAuthenticated: boolean
-  login: (p: { docType: DocType; docNum: string; phone: string }) => Promise<void>
-  logout: () => void
-}
-
-const SessionCtx = createContext<Ctx | null>(null)
-
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null)
-
-  useEffect(() => {
-    setSession(getSession())
-  }, [])
-
-  const api = useMemo<Ctx>(
-    () => ({
-      session,
-      isAuthenticated: !!session,
-      async login(p) {
-        const s = await authLogin(p)
-        setSession(s)
-      },
-      logout() {
-        authLogout()
-        setSession(null)
-      },
-    }),
-    [session],
-  )
-
-  return <SessionCtx.Provider value={api}>{children}</SessionCtx.Provider>
+  return <>{children}</>
 }
 
 export function useSession() {
-  const ctx = useContext(SessionCtx)
-  if (!ctx) throw new Error('useSession must be used within SessionProvider')
-  return ctx
+  const queryClient = useQueryClient()
+
+  const { data: session } = useQuery<Session | null>({
+    queryKey: ['session'],
+    queryFn: () => Promise.resolve(getSession()),
+
+    initialData: () => getSession(),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    gcTime: Infinity,
+  })
+
+  const loginMutation = useMutation({
+    mutationFn: (payload: { docType: DocType; docNum: string; phone: string }) =>
+      loginService(payload),
+    onSuccess: (newSession) => {
+      queryClient.setQueryData(['session'], newSession)
+    },
+  })
+
+  function logout() {
+    logoutService()
+    queryClient.setQueryData(['session'], null)
+  }
+
+  return {
+    session: session ?? null,
+    isAuthenticated: Boolean(session),
+    login: (payload: { docType: DocType; docNum: string; phone: string }) =>
+      loginMutation.mutateAsync(payload),
+    logout,
+  }
 }

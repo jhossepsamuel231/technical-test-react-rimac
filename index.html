@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/rimac-logo-red.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>technical-test-rimac</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+  <script>
+    document.documentElement.classList.add('no-gradients')
+    window.addEventListener('load', () => {
+      document.documentElement.classList.remove('no-gradients')
+    })
+  </script>
   </body>
 </html>

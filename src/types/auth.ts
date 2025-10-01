@@ -14,3 +14,6 @@ export type Session = {
   createdAt: number
   expiresAt: number
 }
+
+export type Plan = { name: string; price: number; description: string[]; age: number }
+export type PlansResponse = { list: Plan[] }

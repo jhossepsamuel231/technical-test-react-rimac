@@ -8,7 +8,6 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: Option[]
   hint?: string
   error?: string
-  /** Adorno antes del select (icono, texto, etc.) */
   startAdornment?: ReactNode
 }
 

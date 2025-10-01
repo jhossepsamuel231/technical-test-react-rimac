@@ -1,0 +1,68 @@
+.navbar {
+  position: relative;
+  z-index: 13;
+}
+#main {
+  position: relative;
+  z-index: 3;
+}
+footer {
+  position: relative;
+  z-index: 3;
+}
+
+.pageGradients {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: rgba(250, 251, 255, 1);
+}
+
+.pageGradients::before,
+.pageGradients::after {
+  content: '';
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 15vw;
+  height: 60vh;
+}
+
+.pageGradients::before {
+  left: 0;
+  bottom: 0;
+  background-image: url('@/assets/layout/grad-left.png');
+}
+
+.pageGradients::after {
+  right: 0;
+  top: 0;
+  background-image: url('@/assets/layout/grad-right.png');
+}
+
+@media (min-width: 1280px) {
+  .pageGradients::before,
+  .pageGradients::after {
+    width: 20vw;
+    height: 62vh;
+  }
+}
+@media (max-width: 640px) {
+  .pageGradients::before,
+  .pageGradients::after {
+    width: 18vw;
+  }
+}
+
+html.no-gradients .pageGradients {
+  display: none;
+}
+
+html.no-gradients .pageGradients {
+  opacity: 0;
+}
+html:not(.no-gradients) .pageGradients {
+  opacity: 1;
+  transition: opacity 0.25s;
+}

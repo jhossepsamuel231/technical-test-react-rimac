@@ -1,9 +1,9 @@
 :root {
   --container-max: 1360px;
   --navbar-h: 64px;
-
   --pad-x-mobile: 16px;
   --pad-x-small: 24px;
+  --footer-h: 64px;
 }
 
 *,
@@ -23,4 +23,19 @@ body {
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root main#main {
+  flex: 1 0 auto;
+}
+
+#root header.navbar,
+#root footer.footer {
+  flex: 0 0 auto;
 }

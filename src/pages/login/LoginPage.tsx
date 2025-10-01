@@ -6,11 +6,9 @@ import { useSession } from '@/hooks/useSession'
 import Button from '@/components/ui/Button'
 import Checkbox from '@/components/ui/Checkbox'
 import hero from '@/assets/login/hero.png'
+import { isDni, isRuc, isPhone } from '@/lib/validators'
 
 type DocType = 'DNI' | 'RUC'
-const isDni = (v: string) => /^\d{8}$/.test(v)
-const isRuc = (v: string) => /^(10|20)\d{9}$/.test(v)
-const isPhone = (v: string) => /^\d{9}$/.test(v)
 
 export default function LoginPage() {
   const idDocType = useId()
@@ -81,8 +79,22 @@ export default function LoginPage() {
     <section className="login">
       <div className="container">
         <div className="login__grid">
-          <div className="login__left" aria-hidden="true">
-            <img className="login__hero login__hero--desk" src={hero} alt="" />
+          <div className="login__left">
+            <picture>
+              <source media="(min-width: 768px)" srcSet={hero} type="image/png" />
+              <source media="(max-width: 767px)" srcSet={hero} type="image/png" />
+              <img
+                className="login__hero"
+                src={hero}
+                alt="Imagen de login"
+                width={1360}
+                height={520}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            </picture>
           </div>
 
           <div className="login__right">

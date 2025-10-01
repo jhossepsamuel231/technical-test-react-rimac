@@ -1,5 +1,6 @@
 import { getJSON } from './api'
 import type { Session, UserProfile, DocType } from '@/types/auth'
+import { isDni as isValidDNI, isRuc as isValidRUC, isPhone as isValidPhone } from '@/lib/validators'
 
 const SESSION_KEY = 'app.session.v1'
 const SESSION_TTL_MS = 2 * 60 * 60 * 1000
@@ -9,28 +10,27 @@ const VALID_USERS: Array<{ docType: DocType; docNum: string; phone: string }> = 
   { docType: 'RUC', docNum: '20123456789', phone: '912345678' },
 ]
 
-const isValidDNI = (v: string) => /^\d{8}$/.test(v)
-const isValidRUC = (v: string) => /^(10|20)\d{9}$/.test(v)
-const isValidPhone = (v: string) => /^\d{9}$/.test(v)
-
 export function getSession(): Session | null {
   try {
-    const raw = localStorage.getItem(SESSION_KEY)
-    if (!raw) return null
-    const s = JSON.parse(raw) as Session
-    if (Date.now() > s.expiresAt) {
+    const serialized = localStorage.getItem(SESSION_KEY)
+    if (!serialized) return null
+
+    const storedSession = JSON.parse(serialized) as Session
+    const nowMs = Date.now()
+
+    if (nowMs > storedSession.expiresAt) {
       localStorage.removeItem(SESSION_KEY)
       return null
     }
-    return s
+    return storedSession
   } catch {
     localStorage.removeItem(SESSION_KEY)
     return null
   }
 }
 
-export function setSession(s: Session) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(s))
+export function setSession(session: Session) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session))
 }
 
 export function clearSession() {
@@ -52,25 +52,28 @@ export async function login(params: {
     throw new Error('Celular inválido (9 dígitos).')
   }
 
-  const ok = VALID_USERS.some(
-    (u) => u.docType === params.docType && u.docNum === params.docNum && u.phone === params.phone,
+  const isValidCredentials = VALID_USERS.some(
+    (user) =>
+      user.docType === params.docType &&
+      user.docNum === params.docNum &&
+      user.phone === params.phone,
   )
-  if (!ok) throw new Error('Credenciales incorrectas.')
+  if (!isValidCredentials) throw new Error('Credenciales incorrectas.')
 
-  const profile = await getJSON<UserProfile>(
+  const userProfile = await getJSON<UserProfile>(
     'https://rimac-front-end-challenge.netlify.app/api/user.json',
   )
 
-  const now = Date.now()
-  const session: Session = {
-    profile,
+  const nowMs = Date.now()
+  const newSession: Session = {
+    profile: userProfile,
     ...params,
-    createdAt: now,
-    expiresAt: now + SESSION_TTL_MS,
+    createdAt: nowMs,
+    expiresAt: nowMs + SESSION_TTL_MS,
   }
 
-  setSession(session)
-  return session
+  setSession(newSession)
+  return newSession
 }
 
 export function logout() {

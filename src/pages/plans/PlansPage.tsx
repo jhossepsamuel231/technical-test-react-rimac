@@ -1,63 +1,62 @@
+// src/pages/plans/PlansPage.tsx
 import './plan.scss'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Stepper from '@/components/Stepper/Stepper'
 import PlanHero from '@/components/Plans/PlanHero'
-import PlanSelector, { type ForWhom } from '../../components/Plans/PlanSelector'
-import { usePlans } from '@/hooks/usePlans'
-import { calcAge, filterByAge, pickRecommendedIndex, finalPrice, type Plan } from '@/lib/plan-logic'
+import PlanSelector, { type ForWhom } from '@/components/Plans/PlanSelector'
 import PlanList from '@/components/Plans/PlanList'
-import { useNavigate } from 'react-router-dom'
+import { usePlans } from '@/hooks/usePlans'
+import { filterByAge, pickRecommendedIndex, finalPrice } from '@/lib/plan-logic'
 import { saveSelectedPlanToLocalStorage } from '@/features/plan/selectedPlanStorage'
+import { useUserInfo } from '@/hooks/useUserInfo'
+import type { Plan } from '@/types/auth'
 
 export default function PlansPage() {
-  // Cambiar mas adelante por datos reales de sesión
-  const sessionUserFirstName = 'Rocío'
-  const sessionUserFullName = 'Rocio Miranda Díaz'
-  const sessionUserBirthDateISO = '1999-04-10'
-  const sessionUserDocType: 'DNI' | 'RUC' = 'DNI'
-  const sessionUserDocNumber = '444888888'
-  const sessionUserMobileNumber = '5130216147'
-
   const navigate = useNavigate()
+
+  const { isAuthenticated, user, ageYears } = useUserInfo()
+
+  useEffect(() => {
+    if (!isAuthenticated) navigate('/login', { replace: true })
+  }, [isAuthenticated, navigate])
 
   const [forWhom, setForWhom] = useState<ForWhom | null>(null)
 
   const { data: allPlans, isLoading, isError, refetch } = usePlans(!!forWhom)
 
-  const userAge = useMemo(() => calcAge(sessionUserBirthDateISO), [sessionUserBirthDateISO])
-
   const visiblePlans: Plan[] = useMemo(() => {
     if (!allPlans) return []
-    const base = filterByAge(allPlans, userAge)
+    const base = ageYears == null ? allPlans : filterByAge(allPlans, ageYears)
     if (!forWhom) return base
-    const discount = forWhom === 'other'
-    return base.map((p) => ({ ...p, price: finalPrice(p.price, discount) }))
-  }, [allPlans, userAge, forWhom])
+    const hasDiscount = forWhom === 'other'
+    return base.map((plan) => ({ ...plan, price: finalPrice(plan.price, hasDiscount) }))
+  }, [allPlans, ageYears, forWhom])
 
   const recommendedIndex = useMemo(
-    () => (visiblePlans.length ? pickRecommendedIndex(visiblePlans, userAge) : null),
-    [visiblePlans, userAge],
+    () =>
+      visiblePlans.length && ageYears != null ? pickRecommendedIndex(visiblePlans, ageYears) : null,
+    [visiblePlans, ageYears],
   )
 
-  const handlePlanSelectionAndNavigate = (selectedPlanFromList: Plan) => {
+  const handlePlanSelectionAndNavigate = (selectedPlan: Plan) => {
     saveSelectedPlanToLocalStorage({
-      insuredFullName: sessionUserFullName,
-      payerDocumentType: sessionUserDocType,
-      payerDocumentNumber: sessionUserDocNumber,
-      payerMobileNumber: sessionUserMobileNumber,
-      chosenPlanName: selectedPlanFromList.name,
-      chosenPlanMonthlyPrice: selectedPlanFromList.price,
+      insuredFullName: user.fullName,
+      payerDocumentType: user.documentType,
+      payerDocumentNumber: user.documentNumber,
+      payerMobileNumber: user.mobilePhone,
+      chosenPlanName: selectedPlan.name,
+      chosenPlanMonthlyPrice: selectedPlan.price,
     })
 
     localStorage.setItem('isSessionReady', '1')
-
     navigate('/resumen')
   }
 
   return (
     <main className="plans-page">
       <Stepper active="plans" />
-      <PlanHero username={sessionUserFirstName} />
+      <PlanHero username={user.firstName} />
       <PlanSelector value={forWhom} onChange={setForWhom} />
 
       {!forWhom && (
@@ -71,13 +70,17 @@ export default function PlansPage() {
           {isError && (
             <div role="alert" style={{ textAlign: 'center' }}>
               <p>Hubo un problema al cargar los planes.</p>
-              <button onClick={() => refetch()}>Intentar de nuevo</button>
+              <button type="button" onClick={() => refetch()}>
+                Intentar de nuevo
+              </button>
             </div>
           )}
 
           {!isLoading && !isError && visiblePlans.length === 0 && (
             <p style={{ textAlign: 'center' }}>
-              No hay planes disponibles para tu edad ({userAge}).
+              {ageYears == null
+                ? 'No pudimos calcular tu edad. No hay planes disponibles.'
+                : `No hay planes disponibles para tu edad (${ageYears}).`}
             </p>
           )}
 

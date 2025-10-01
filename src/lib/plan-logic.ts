@@ -1,5 +1,4 @@
-export type Plan = { name: string; price: number; description: string[]; age: number }
-export type PlansResponse = { list: Plan[] }
+import type { Plan } from '@/types/auth'
 
 export function calcAge(dob: string | Date, now = new Date()): number {
   const birth = new Date(dob)

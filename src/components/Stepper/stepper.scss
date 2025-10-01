@@ -59,12 +59,12 @@
 }
 
 .stepper__label.is-active {
-  font-weight: 700; /* “Planes y coberturas” */
+  font-weight: 700;
   color: var(--c-ink-900);
 }
 
 .stepper__label.is-idle {
-  font-weight: 400; /* “Resumen” */
+  font-weight: 400;
   color: var(--c-ink-600);
 }
 
@@ -75,11 +75,10 @@
   transform: translateY(-1px);
 }
 
-/* Responsivo */
 @media (max-width: 480px) {
   .stepper__label {
     font-size: 0.9375rem;
-  } /* 15px óptico */
+  }
   .stepper__dots {
     margin-inline: 4px;
   }
