@@ -1,21 +1,30 @@
+import './plan.scss'
 import { useMemo, useState } from 'react'
 import Stepper from '@/components/Stepper/Stepper'
-import PlanHero from '@/components/PlanHero/PlanHero'
-import PlanSelector, { type ForWhom } from './PlanSelector'
-
+import PlanHero from '@/components/Plans/PlanHero'
+import PlanSelector, { type ForWhom } from '../../components/Plans/PlanSelector'
 import { usePlans } from '@/hooks/usePlans'
 import { calcAge, filterByAge, pickRecommendedIndex, finalPrice, type Plan } from '@/lib/plan-logic'
 import PlanList from '@/components/Plans/PlanList'
+import { useNavigate } from 'react-router-dom'
+import { saveSelectedPlanToLocalStorage } from '@/features/plan/selectedPlanStorage'
 
 export default function PlansPage() {
-  const username = 'Rocío'
-  const dob = '1999-04-10'
+  // Cambiar mas adelante por datos reales de sesión
+  const sessionUserFirstName = 'Rocío'
+  const sessionUserFullName = 'Rocio Miranda Díaz'
+  const sessionUserBirthDateISO = '1999-04-10'
+  const sessionUserDocType: 'DNI' | 'RUC' = 'DNI'
+  const sessionUserDocNumber = '444888888'
+  const sessionUserMobileNumber = '5130216147'
+
+  const navigate = useNavigate()
 
   const [forWhom, setForWhom] = useState<ForWhom | null>(null)
 
   const { data: allPlans, isLoading, isError, refetch } = usePlans(!!forWhom)
 
-  const userAge = useMemo(() => calcAge(dob), [dob])
+  const userAge = useMemo(() => calcAge(sessionUserBirthDateISO), [sessionUserBirthDateISO])
 
   const visiblePlans: Plan[] = useMemo(() => {
     if (!allPlans) return []
@@ -30,10 +39,25 @@ export default function PlansPage() {
     [visiblePlans, userAge],
   )
 
+  const handlePlanSelectionAndNavigate = (selectedPlanFromList: Plan) => {
+    saveSelectedPlanToLocalStorage({
+      insuredFullName: sessionUserFullName,
+      payerDocumentType: sessionUserDocType,
+      payerDocumentNumber: sessionUserDocNumber,
+      payerMobileNumber: sessionUserMobileNumber,
+      chosenPlanName: selectedPlanFromList.name,
+      chosenPlanMonthlyPrice: selectedPlanFromList.price,
+    })
+
+    localStorage.setItem('isSessionReady', '1')
+
+    navigate('/resumen')
+  }
+
   return (
-    <main>
+    <main className="plans-page">
       <Stepper active="plans" />
-      <PlanHero username={username} onBack={() => history.back()} />
+      <PlanHero username={sessionUserFirstName} />
       <PlanSelector value={forWhom} onChange={setForWhom} />
 
       {!forWhom && (
@@ -62,9 +86,7 @@ export default function PlansPage() {
               plans={visiblePlans}
               recommendedIndex={recommendedIndex}
               forWhom={forWhom}
-              onSelectPlan={(plan: Plan) => {
-                console.log('Elegido:', { forWhom, plan })
-              }}
+              onSelectPlan={handlePlanSelectionAndNavigate}
             />
           )}
         </section>

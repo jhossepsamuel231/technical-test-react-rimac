@@ -1,99 +1,108 @@
 @use '../../styles/tokens' as *;
 
-:root {
-  --gap: 24px;
-  --gutter: 12px;
+.plans {
+  --gap: 32px;
+  --gutter: 24px;
+  --nav-size: 36px;
+  --nav-offset: 15px;
 }
 
-/* ...lo que ya tienes arriba se queda igual... */
-
-/* Contenedor del carrusel: NO cortes en mobile */
-.plans__wrap {
-  position: relative;
-  display: grid;
-  place-items: center;
-  margin-block: 8px 16px;
-  overflow: visible; /* antes: hidden; -> provoca recortes */
-}
-
-/* Viewport */
 .plans__viewport {
   --per: var(--per-view, 3);
-  width: calc(var(--per) * var(--card-w) + (var(--per) - 1) * var(--gap));
-  overflow-x: hidden; /* sin barras */
-  overflow-y: visible;
-  border-radius: 24px;
-  box-sizing: content-box; /* evita que el padding afecte el ancho */
+
+  --mask-w: calc(var(--per) * var(--card-w) + (var(--per) - 1) * var(--gap) + 2 * var(--gutter));
+
+  inline-size: min(100%, calc(var(--mask-w) + 2 * (var(--nav-size) + var(--nav-offset))));
+
+  margin-inline: auto;
+  padding-block: var(--pad-y);
+  padding-inline: calc(var(--nav-size) + var(--nav-offset));
+  position: relative;
+  overflow: visible;
+  box-sizing: content-box;
 }
 
-/* Track */
+.plans__mask {
+  inline-size: min(100%, var(--mask-w));
+  margin-inline: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
 .plans__track {
   display: flex;
   gap: var(--gap);
   padding-inline: var(--gutter);
-  transition: transform 0.25s ease;
+  transition: transform 240ms ease;
   will-change: transform;
 }
 
-/* Slide */
 .plans__slide {
-  flex: 0 0 calc(100% / var(--per-view, 3));
+  list-style: none;
   display: grid;
+  flex: 0 0 calc((100% - (var(--per-view, 3) - 1) * var(--gap)) / var(--per-view, 3));
 }
 
-/* Flechas DENTRO del carrusel */
 .plans__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
-  width: 32px;
-  height: 32px;
+  inline-size: var(--nav-size);
+  block-size: var(--nav-size);
   border-radius: 999px;
-  border: 1.5px solid rgba(20, 25, 56, 0.25);
+  border: 1px solid rgba(20, 25, 56, 0.25);
   background: #fff;
   color: #5b62f4;
-  cursor: pointer;
   display: grid;
   place-items: center;
+  cursor: pointer;
+  z-index: 2;
+
+  /* sombra sutil del botón */
+  box-shadow:
+    0 1px 1px rgba(20, 25, 56, 0.04),
+    0 6px 18px rgba(20, 25, 56, 0.14);
 }
+
 .plans__nav--prev {
-  left: 8px;
+  left: var(--nav-offset);
 }
 .plans__nav--next {
-  right: 8px;
+  right: var(--nav-offset);
 }
+
 .plans__nav[aria-disabled='true'] {
   opacity: 0.5;
   pointer-events: none;
 }
 
 .plans__pager {
-  margin: 10px 0 28px;
+  margin: 8px 0 28px;
   text-align: center;
   font-family: var(--ff-sans);
   color: var(--c-ink-900);
 }
 
-@media (max-width: 480px) {
-  .plans__viewport {
-    width: 100%;
-  }
-  .plans__track {
-    padding-inline: 16px;
-  }
-  .plans__slide {
-    flex: 0 0 100%;
-  }
-  .plans__nav--prev {
-    left: 6px;
-  }
-  .plans__nav--next {
-    right: 6px;
+/* Ajustes responsivos */
+@media (max-width: 1100px) {
+  .plans {
+    --gutter: 20px;
   }
 }
 
-html,
-body {
-  overflow-x: hidden;
+@media (max-width: 740px) {
+  .plans {
+    --gap: 20px;
+    --gutter: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .plans {
+    --gap: 16px;
+    --gutter: 12px;
+  }
+  .plans__slide {
+    flex-basis: 100%;
+  } /* 1 por vista */
 }

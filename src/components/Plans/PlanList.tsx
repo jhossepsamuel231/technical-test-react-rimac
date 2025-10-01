@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import './PlanList.scss'
 import PlanCard from './PlanCard'
-
 import iconHome from '@/assets/plan-icons/home.svg'
 import iconClinic from '@/assets/plan-icons/clinic.svg'
 
@@ -32,32 +31,30 @@ export default function PlanList({ plans, recommendedIndex = null, onSelectPlan,
     [orderedPlans],
   )
 
-  const perViewFromWidth = () => (window.innerWidth >= 1100 ? 3 : window.innerWidth >= 740 ? 2 : 1)
+  const getPerView = () => (window.innerWidth >= 1100 ? 3 : window.innerWidth >= 740 ? 2 : 1)
 
-  const [perView, setPerView] = useState<number>(perViewFromWidth())
+  const [perView, setPerView] = useState<number>(getPerView())
   useEffect(() => {
-    const onResize = () => setPerView(perViewFromWidth())
+    const onResize = () => setPerView(getPerView())
     window.addEventListener('resize', onResize, { passive: true })
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
   const totalPages = Math.max(1, orderedPlans.length - perView + 1)
   const [page, setPage] = useState(0)
-  useEffect(() => {
-    setPage(0)
-  }, [perView, orderedPlans.length])
+  useEffect(() => setPage(0), [perView, orderedPlans.length])
 
   const prev = () => setPage((p) => Math.max(0, p - 1))
   const next = () => setPage((p) => Math.min(totalPages - 1, p + 1))
+
   const translatePct = (100 / perView) * page
 
-  // ✅ Tipado seguro para la custom property CSS --per-view (eliminando el `any`)
   type ViewportStyle = CSSProperties & { ['--per-view']?: number }
   const viewportStyle: ViewportStyle = useMemo(() => ({ ['--per-view']: perView }), [perView])
 
   return (
     <section className="plans" aria-label="Lista de planes">
-      <div className="plans__wrap">
+      <div className="plans__viewport" style={viewportStyle}>
         <button
           type="button"
           className="plans__nav plans__nav--prev"
@@ -68,10 +65,14 @@ export default function PlanList({ plans, recommendedIndex = null, onSelectPlan,
           ‹
         </button>
 
-        <div className="plans__viewport" style={viewportStyle}>
-          <div className="plans__track" style={{ transform: `translateX(-${translatePct}%)` }}>
+        <div className="plans__mask">
+          <ul
+            className="plans__track"
+            style={{ transform: `translateX(-${translatePct}%)` }}
+            role="list"
+          >
             {orderedPlans.map((plan, i) => (
-              <div className="plans__slide" key={plan.name}>
+              <li className="plans__slide" key={plan.name} role="listitem">
                 <PlanCard
                   plan={plan}
                   iconUrl={icons[i]}
@@ -79,9 +80,9 @@ export default function PlanList({ plans, recommendedIndex = null, onSelectPlan,
                   onSelect={() => onSelectPlan?.(plan)}
                   oldPrice={isOther ? Number((plan.price / 0.95).toFixed(2)) : undefined}
                 />
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
         <button
@@ -95,6 +96,7 @@ export default function PlanList({ plans, recommendedIndex = null, onSelectPlan,
         </button>
       </div>
 
+      {/* Paginador simple */}
       <div className="plans__pager" aria-live="polite">
         {page + 1} / {totalPages}
       </div>

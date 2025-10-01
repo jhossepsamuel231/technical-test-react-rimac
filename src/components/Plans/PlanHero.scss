@@ -13,14 +13,36 @@
 }
 
 .plan-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
   appearance: none;
   border: 0;
   background: none;
-  font-family: var(--ff-sans);
-  font-size: 0.9375rem;
-  color: #5b62f4;
   cursor: pointer;
+
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0.4px;
+  color: rgba(79, 79, 255, 1);
+
   padding: 4px 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  img {
+    flex-shrink: 0;
+  }
 }
 
 .plan-hero__title {
@@ -31,7 +53,7 @@
   font-size: 40px;
   line-height: 48px;
   letter-spacing: -0.6px;
-  color: #141938; /* rgba(20,25,56,1) */
+  color: #141938;
 }
 
 .plan-hero__subtitle {
@@ -40,7 +62,7 @@
   font-family: 'Lato', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  line-height: 28px; /* exacto del figma */
+  line-height: 28px;
   letter-spacing: 0.1px;
   color: #141938;
   opacity: 0.9;

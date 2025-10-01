@@ -5,7 +5,7 @@ const SESSION_KEY = 'app.session.v1'
 const SESSION_TTL_MS = 2 * 60 * 60 * 1000
 
 const VALID_USERS: Array<{ docType: DocType; docNum: string; phone: string }> = [
-  { docType: 'DNI', docNum: '30216147', phone: '513021647' },
+  { docType: 'DNI', docNum: '30216147', phone: '987654321' },
   { docType: 'RUC', docNum: '20123456789', phone: '912345678' },
 ]
 

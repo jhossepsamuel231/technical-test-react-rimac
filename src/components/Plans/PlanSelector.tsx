@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import './plan-selector.scss'
+import './PlanSelector.scss'
 
 import iconMeUrl from '@/assets/icons/me.svg'
 import iconOtherUrl from '@/assets/icons/other.svg'

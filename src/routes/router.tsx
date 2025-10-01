@@ -1,4 +1,3 @@
-// src/routes/router.tsx
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import RequireSession from './guards/RequireSession'
 import RequireSelectedPlan from './guards/RequireSelectedPlan'

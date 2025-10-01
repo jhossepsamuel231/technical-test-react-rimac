@@ -1,0 +1,143 @@
+$ink: rgba(20, 25, 56, 1);
+$page-bg: rgba(250, 251, 255, 1);
+$card-shadow: 0 1px 24px rgba(174, 172, 243, 0.25);
+
+.summary {
+  background: $page-bg;
+  min-height: 100vh;
+  padding-block: clamp(16px, 3vw, 32px);
+}
+
+.summary__container {
+  max-width: 928px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 0px);
+}
+
+.summary__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0.4px;
+  color: rgba(79, 79, 255, 1);
+  text-decoration: none;
+
+  margin-bottom: 16px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.summary__title {
+  margin: 0 0 24px;
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.6px;
+  color: $ink;
+}
+
+.summary-card {
+  width: 100%;
+  min-height: 308px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: $card-shadow;
+  padding: 24px 32px;
+  display: grid;
+  gap: 16px;
+}
+
+.summary-card__header {
+  display: grid;
+  gap: 8px;
+}
+
+.summary-card__eyebrow {
+  margin: 0;
+  font-family: Lato, sans-serif;
+  font-weight: 900;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: $ink;
+  text-align: left;
+}
+
+.summary-card__headline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.summary-card__icon {
+  width: 24px;
+  height: 24px;
+  color: $ink;
+}
+
+.summary-card__name {
+  margin: 0;
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.2px;
+  color: $ink;
+}
+
+.summary-card__divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 0;
+  margin: 6px 0 12px;
+}
+
+.summary-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 16px;
+}
+
+.summary-card__block {
+  display: grid;
+  gap: 4px;
+}
+
+.summary-card__block-title {
+  margin: 0 0 2px;
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $ink;
+}
+
+.summary-card__text {
+  margin: 0;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: $ink;
+}
